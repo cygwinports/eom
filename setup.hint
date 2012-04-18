@@ -1,0 +1,5 @@
+category: Graphics MATE
+requires: libatk1.0_0 libcairo2 libdbus-glib_1_2 libexempi3 libexif12 libgdk_pixbuf2.0_0 libglib2.0_0 libgtk2.0_0 libintl8 libjpeg8 liblcms1 libmateconf2_4 libmate-desktop2_17 librsvg2_2 libX11_6 libxml2 python python-gobject python-gtk2.0 zlib0 mate-conf
+sdesc: "Eye of MATE image viewer"
+ldesc: "MATE is a fork of the GNOME 2 desktop. It provides an intuitive
+and attractive desktop to Linux users using traditional metaphors."
