@@ -1,0 +1,109 @@
+--- origsrc/eom-1.10.3/data/eom.pc.in	2014-01-01 15:31:30.000000000 -0600
++++ src/eom-1.10.3/data/eom.pc.in	2015-09-24 12:37:50.902358600 -0500
+@@ -9,3 +9,4 @@ Description: The MATE Image Viewer
+ Requires: gtk+-@GTK_API_VERSION@, gio-2.0
+ Version: @VERSION@
+ Cflags: -I${includedir}
++Libs: -L${libdir} -leom
+--- origsrc/eom-1.10.3/doc/reference/Makefile.am	2013-10-21 07:09:51.000000000 -0500
++++ src/eom-1.10.3/doc/reference/Makefile.am	2015-09-24 13:07:16.891640900 -0500
+@@ -93,19 +93,12 @@ AM_CPPFLAGS= \
+ 	-I$(top_srcdir)/cut-n-paste/totem-screensaver		\
+ 	$(EOM_CFLAGS)
+ 
+-if ENABLE_JPEG
+-jpeg_LIB = $(top_builddir)/jpegutils/libeom-jpegutils.la
+-endif
+-
+ GTKDOC_LIBS=\
+ 	$(top_builddir)/src/libeom.la 	\
+-	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la \
+-	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la \
+ 	$(BINDING_LIBS)			\
+ 	$(LIBJPEG)			\
+ 	$(X_LIBS)			\
+ 	$(EOM_LIBS)			\
+-	$(jpeg_LIB)			\
+ 	$(MORE_GTKDOC_LIBS)
+ 
+ # This includes the standard gtk-doc make rules, copied by gtkdocize.
+--- origsrc/eom-1.10.3/plugins/Makefile.am	2013-10-21 07:09:51.000000000 -0500
++++ src/eom-1.10.3/plugins/Makefile.am	2015-09-24 13:07:39.061671500 -0500
+@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
+ 	$(WARN_CFLAGS)					\
+ 	-DEOM_LOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"
+ 
+-AM_LDFLAGS = -avoid-version -module
++AM_LDFLAGS = -avoid-version -module -no-undefined $(top_builddir)/src/libeom.la
+ 
+ plugins_LTLIBRARIES = \
+ 	fullscreen/libfullscreen.la  \
+--- origsrc/eom-1.10.3/src/Makefile.am	2014-10-06 06:48:40.000000000 -0500
++++ src/eom-1.10.3/src/Makefile.am	2015-09-24 13:25:17.875061400 -0500
+@@ -6,7 +6,7 @@ toolbar_LIB = $(top_builddir)/cut-n-past
+ 
+ screensaver_LIB = $(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la
+ 
+-noinst_LTLIBRARIES = libeom.la
++lib_LTLIBRARIES = libeom.la
+ 
+ bin_PROGRAMS = eom
+ 
+@@ -142,9 +142,9 @@ if HAVE_EXEMPI
+ if !HAVE_EXIF
+ INST_H_FILES +=				\
+ 	eom-exif-details.h
+-endif !HAVE_EXIF
+ libeom_la_SOURCES +=			\
+ 	eom-exif-details.c
++endif !HAVE_EXIF
+ endif HAVE_EXEMPI
+ 
+ libeom_la_CPPFLAGS =						\
+@@ -162,7 +162,11 @@ libeom_la_CFLAGS =						\
+ 	$(EOM_CFLAGS)						\
+ 	$(WARN_CFLAGS)
+ 
+-libeom_la_LIBADD = \
++libeom_la_LIBADD =			\
++	$(toolbar_LIB)			\
++	$(screensaver_LIB)		\
++	$(jpeg_LIB)			\
++	$(LIBJPEG)			\
+ 	$(EOM_LIBS)
+ 
+ if HAVE_LCMS
+@@ -184,6 +188,8 @@ libeom_la_LIBADD += \
+ 	$(top_builddir)/bindings/python/eom.la
+ endif
+ 
++libeom_la_LDFLAGS = -no-undefined
++
+ eom_SOURCES = main.c
+ 
+ eom_CFLAGS = 							\
+@@ -197,10 +203,6 @@ eom_CFLAGS = 							\
+ eom_LDADD = 				\
+ 	libeom.la			\
+ 	$(EOM_LIBS)			\
+-	$(LIBJPEG)			\
+-	$(toolbar_LIB)			\
+-	$(screensaver_LIB)		\
+-	$(jpeg_LIB)			\
+ 	$(INTROSPECTION_LIBS)
+ 
+ BUILT_SOURCES = 			\
+@@ -243,11 +245,11 @@ if HAVE_INTROSPECTION
+ INTROSPECTION_GIRS = Eom-1.0.gir
+ INTROSPECTION_SCANNER_ARGS = -I$(top_srcdir) --warn-all $(libeom_la_CPPFLAGS)
+ 
+-Eom-1.0.gir: eom
++Eom-1.0.gir: libeom.la
+ Eom_1_0_gir_INCLUDES = Gtk-${GTK_API_VERSION}
+ Eom_1_0_gir_FILES = $(INST_H_FILES) $(libeom_c_files) $(BUILT_SOURCES)
+ Eom_1_0_gir_VERSION = 1.0
+-Eom_1_0_gir_PROGRAM = $(builddir)/eom
++Eom_1_0_gir_LIBS = libeom.la
+ Eom_1_0_gir_NAMESPACE = Eom
+ Eom_1_0_gir_CFLAGS = $(EOM_CFLAGS)
+ girdir = $(datadir)/gir-1.0
