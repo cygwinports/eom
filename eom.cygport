@@ -12,11 +12,11 @@ PATCH_URI="1.10.3-no-undefined.patch"
 
 PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc"
 eom_OBSOLETES="mate-image-viewer"
-eom_CONTENTS="--exclude=gtk-doc etc/ usr/bin/ usr/lib/gir* usr/lib/eom/ usr/share/"
+eom_CONTENTS="--exclude=gtk-doc etc/ usr/bin/ usr/lib/eom/ usr/share/"
 eom_devel_OBSOLETES="mate-image-viewer-devel"
 eom_devel_CONTENTS="usr/include/ usr/lib/lib* usr/lib/pkgconfig/"
 eom_doc_CATEGORY="Doc"
 eom_doc_CONTENTS="usr/share/gtk-doc/"
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=639597
-CYGCONF_ARGS="--disable-python"
+CYGCONF_ARGS="--disable-introspection --disable-python"
