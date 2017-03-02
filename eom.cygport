@@ -1,7 +1,7 @@
 inherit mate
 
 NAME="eom"
-VERSION=1.14.2
+VERSION=1.16.1
 RELEASE=1
 CATEGORY="Graphics MATE"
 SUMMARY="Eye of MATE image viewer"
@@ -19,4 +19,4 @@ eom_doc_CATEGORY="Doc"
 eom_doc_CONTENTS="usr/share/gtk-doc/"
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=639597
-CYGCONF_ARGS="--disable-introspection --disable-python"
+CYGCONF_ARGS="--disable-introspection --disable-python --with-gtk=3.0"
