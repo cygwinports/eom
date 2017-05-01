@@ -1,22 +1,39 @@
 inherit mate
 
 NAME="eom"
-VERSION=1.16.1
+VERSION=1.18.1
 RELEASE=1
 CATEGORY="Graphics MATE"
 SUMMARY="Eye of MATE image viewer"
 DESCRIPTION="MATE is a fork of the GNOME 2 desktop. It provides an intuitive
 and attractive desktop to Linux users using traditional metaphors."
 
-PATCH_URI="1.10.3-no-undefined.patch"
+PATCH_URI="1.18.1-no-undefined.patch"
 
 PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc"
 eom_OBSOLETES="mate-image-viewer"
-eom_CONTENTS="--exclude=gtk-doc etc/ usr/bin/ usr/lib/eom/ usr/share/"
+eom_CONTENTS="
+	etc/postinstall/eom.sh
+	usr/bin/cygeom-0.dll
+	usr/bin/eom.exe
+	usr/lib/eom/plugins/
+	usr/lib/girepository-1.0/Eom-1.0.typelib
+	usr/share/appdata/eom.appdata.xml
+	usr/share/applications/eom.desktop
+	usr/share/doc/eom/
+	usr/share/eom/
+	usr/share/gir-1.0/Eom-1.0.gir
+	usr/share/glib-2.0/schemas/org.mate.eom.*
+	usr/share/help/*/eom/
+	usr/share/icons/hicolor/*/apps/eom.*
+	usr/share/locale/*/*/eom.mo
+	usr/share/man/man1/eom.1*
+"
 eom_devel_OBSOLETES="mate-image-viewer-devel"
-eom_devel_CONTENTS="usr/include/ usr/lib/lib* usr/lib/pkgconfig/"
+eom_devel_CONTENTS="
+	usr/include/eom-*/
+	usr/lib/libeom.dll.a
+	usr/lib/pkgconfig/eom.pc
+"
 eom_doc_CATEGORY="Doc"
 eom_doc_CONTENTS="usr/share/gtk-doc/"
-
-# https://bugzilla.gnome.org/show_bug.cgi?id=639597
-CYGCONF_ARGS="--disable-introspection --disable-python --with-gtk=3.0"
